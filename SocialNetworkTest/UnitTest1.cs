@@ -1,5 +1,6 @@
 using Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Model;
 using System.Collections.Generic;
 
 namespace SocialNetworkTest
@@ -13,21 +14,21 @@ namespace SocialNetworkTest
         public void TestInitializer()
         {
             engine = new SocialNetworkEngine();
-            engine.CreateUser("Alice");
-            engine.CreateUser("Bob");
-            engine.CreateUser("Charlie");
-            engine.CreateUser("Mallory ");
-            engine.CreateUser("Erik");
-            engine.CreateUser("Patrik");
-            engine.CreateUser("Cuba");
-            engine.CreateUser("Elis");
-            engine.CreateUser("Martin");
+            //    engine.CreateUser("Alice");
+            //    engine.CreateUser("Bob");
+            //    engine.CreateUser("Charlie");
+            //    engine.CreateUser("Mallory ");
+            //    engine.CreateUser("Erik");
+            //    engine.CreateUser("Patrik");
+            //    engine.CreateUser("Cuba");
+            //    engine.CreateUser("Elis");
+            //    engine.CreateUser("Martin");
         }
 
        
 
         [TestMethod]
-        [DataRow("Pia", "Ludde", "Vad gör du?")]
+        [DataRow("Pia", "Ludde", "Vad gï¿½r du?")]
         public void TestViewMessages(string sender, string receiver, string message)
         {
             //Arrange

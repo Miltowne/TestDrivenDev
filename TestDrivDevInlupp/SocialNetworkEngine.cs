@@ -7,7 +7,7 @@ namespace Engine
 {
     public class SocialNetworkEngine
     {
-        List<User> Users { get; set; } = new List<User>();
+        public List<User> Users { get; set; } = new List<User>();
 
 
 
@@ -51,11 +51,7 @@ namespace Engine
 
         public List<Post> TimeLine(string user)
         {
-            List<Post> postList = new List<Post>();
-            GetUser(user).Posts.Sort((a, b) => b.SendDateTime.CompareTo(a.SendDateTime));
-            foreach (var post in GetUser(user).Posts)
-                postList.Add(post);
-            return postList;
+            return GetUser(user).Posts.OrderByDescending(s => s.SendDateTime).ToList();
         }
 
 
