@@ -25,10 +25,87 @@ namespace SocialNetworkTest
             //    engine.CreateUser("Martin");
         }
 
-       
+<<<<<<< HEAD
+        [TestMethod]
+        [DataRow("Pia")]
+        public void TestUserExist(string user)
+        {
+            //Arrange
+            int e = 1;
+
+
+            //Act
+            bool userExist = engine.UserExist(user);
+
+            //Assert
+            Assert.IsFalse(userExist);
+        }
 
         [TestMethod]
-        [DataRow("Pia", "Ludde", "Vad g�r du?")]
+        [DataRow("Milton")]
+        public void TestCreateUser(string name)
+        {
+            //Arrange
+            List<User> Users = new List<User>();
+            User user = new User(name);
+            Users.Add(user);
+
+
+            //Act
+            engine.CreateUser(name);
+
+            //Assert
+            Assert.AreEqual(engine.Users[0].UserName, user.UserName);
+        }
+
+        [TestMethod]
+        [DataRow("Milton", "Joe", "kikiki")]
+        public void TestWall(string name, string followedUser, string post)
+        {
+            //Arrange
+
+            engine.CreateUser(name);
+            engine.CreateUser(followedUser);
+            var name1 = engine.GetUser(name);
+            var name2 = engine.GetUser(followedUser);
+
+            var posten = new Post(followedUser, post);
+
+            name1.Posts.Add(posten);
+            name2.Posts.Add(posten);
+
+
+            //Act
+            engine.Follow(name, followedUser);
+            var list = engine.Wall(name);
+
+
+            //Assert
+            Assert.AreEqual(list[0], posten);
+        }
+
+
+        [TestMethod]
+        [DataRow("Milton", "detta är en påst")]
+        public void TestTimeline(string name, string post)
+        {
+            //Arrange
+            engine.CreatePost(name, post);
+
+            //Act
+            var list = engine.TimeLine(name);
+
+            //Assert
+            Assert.AreEqual(list[0].Body, post);
+        }
+
+
+=======
+       
+>>>>>>> 07678ad4b28d368f9745e9d0454c6901b91e0c31
+
+        [TestMethod]
+        [DataRow("Pia", "Ludde", "Vad gï¿½r du?")]
         public void TestViewMessages(string sender, string receiver, string message)
         {
             //Arrange
