@@ -10,7 +10,7 @@ namespace TestDrivDevInlupp
             SocialNetworkEngine engine = new SocialNetworkEngine();
             int inputNamePosition = 0;
             int inputCommandPosition = 1;
-            int inputMessangePosition = 2;
+            int inputMessangeOrReceiverPosition = 2;
 
             Console.WriteLine("Hello and welcome to our social network!");
 
@@ -20,80 +20,84 @@ namespace TestDrivDevInlupp
 
                 var inputName = string.Empty;
                 var inputCommand = string.Empty;
-                var inputMessage = string.Empty;
+                var inputMessageOrReceiver = string.Empty;
+                var inputReceiverName = string.Empty;
 
-                if (command != null && command.Length > inputNamePosition)
-                    inputName = command?[inputNamePosition];
+                if (command[inputNamePosition] != null)
+                    inputName = command[inputNamePosition];
+                if (command[inputCommandPosition] != null)
+                    inputCommand = command[inputCommandPosition];
+                if (command[inputMessangeOrReceiverPosition] != null)
+                {
+                    inputMessageOrReceiver = command[inputMessangeOrReceiverPosition];
+                    for (int i = inputMessangeOrReceiverPosition +1; i < command.Length; i++)
+                        inputMessageOrReceiver = $"{inputMessageOrReceiver} {command[i]}";
+                    string[] receiverName = inputMessageOrReceiver.Split(' ');
+                    inputReceiverName = receiverName[0];
+                }
 
-                if (command != null && command.Length > inputCommandPosition)
-                    inputCommand = command?[inputCommandPosition];
+                //if (command != null && command.Length > inputNamePosition)
+                //    inputName = command?[inputNamePosition];
 
-                if (command != null && command.Length > inputMessangePosition)
-                    for (var i = 2; i < command.Length; i++)
-                        inputMessage = string.IsNullOrEmpty(inputMessage) ? command?[i] : $"{inputMessage} {command?[i]}";
+                //if (command != null && command.Length > inputCommandPosition)
+                //    inputCommand = command?[inputCommandPosition];
 
-                if (command != null)
-                    switch (command.Length)
-                    {
-                        // No commandinput
-                        case 0: continue;
+                //if (command != null && command.Length > inputMessangePosition)
+                //    for (var i = 2; i < command.Length; i++)
+                //        inputMessage = string.IsNullOrEmpty(inputMessage) ? command?[i] : $"{inputMessage} {command?[i]}";
 
-                        // Single word commandinput
-                        case 1: break;
+                switch (inputCommand)
+                {
+                    // message
+                    case "/send_message":
+                        engine.SendMessage(inputName, inputReceiverName, inputMessageOrReceiver);
+                        break;
 
-                        // 2 or more words commandinput
-                        default:
+                    // view message
+                    case "/view_messages":
+                        var messages = engine.ViewMessages(inputName);
 
-                            switch (inputCommand)
-                            {
-                                // message
-                                case "/send_message":
-                                    engine.SendMessage(inputName, command[2], command[3]);
-                                    break;
+                        foreach (var message in messages)
+                            Console.WriteLine($"{message.SendDateTime} {message.Body} From: {message.Sender}");
+                        break;
 
-                                // view message
-                                case "/view_messages":
-                                    var messages = engine.ViewMessages(inputName);
+                    // post
+                    case "/post":
+                        engine.CreatePost(inputName, inputMessageOrReceiver);
+                        break;
 
-                                    foreach (var message in messages)
-                                        Console.WriteLine($"{message.SendDateTime} {message.Body} From: {message.Sender}");
-                                    break;
+                    // wall
+                    case "/wall":
+                        var postsOnWall = engine.Wall(inputName);
 
-                                // post
-                                case "/post":
-                                    engine.CreatePost(inputName, inputMessage);
-                                    break;
+                        foreach (var post in postsOnWall)
+                            Console.WriteLine(post.Body + " Posted by: " + post.Sender);
+                        break;
 
-                                // wall
-                                case "/wall":
-                                    var postsOnWall = engine.Wall(inputName);
+                    // timeline
+                    case "/timeline":
+                        var posts = engine.TimeLine(inputName);
+                        foreach (var post in posts)
+                            Console.WriteLine(post.Body);
+                        break;
 
-                                    foreach (var post in postsOnWall)
-                                        Console.WriteLine(post.Body + " Posted by: " + post.Sender);
-                                    break;
+                    // follow
+                    case "/follow":
+                        var usersToFollow = engine.Follow(inputName, inputReceiverName);
+                        foreach (var user in usersToFollow)
+                        {
+                            Console.WriteLine(user.UserName);
+                        }
 
-                                // timeline
-                                case "/timeline":
-                                    var posts = engine.TimeLine(command[2]);
-                                    foreach (var post in posts)
-                                        Console.WriteLine(post.Body);
-                                    break;
-
-                                // follow
-                                case "/follow":
-                                    var usersToFollow = engine.Follow(inputName, command[2]);
-                                    foreach (var user in usersToFollow)
-                                    {
-                                        Console.WriteLine(user.UserName);
-                                    }
-
-                                    break;
+                        break;
+                    default:
+                        Console.WriteLine("Please write your command");
+                        break;
 
 
-                            }
-                            break;
-                    }
-                
+                }
+
+
             }
         }
     }

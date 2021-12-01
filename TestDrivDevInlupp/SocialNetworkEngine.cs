@@ -9,8 +9,6 @@ namespace Engine
     {
         public List<User> Users { get; set; } = new List<User>();
 
-
-
         public bool UserExist(string name)
         {
             var user = Users.FirstOrDefault(x => x.UserName == name);
