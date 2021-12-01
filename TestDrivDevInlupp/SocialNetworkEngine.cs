@@ -28,14 +28,13 @@ namespace Engine
         }
 
         public User GetUser(string name)
-        {
-            if (!UserExist(name))
-                CreateUser(name);
+        { 
             foreach (var user in Users)
             {
                 if (user.UserName == name) return user;
             }
-            throw new ArgumentException($"username: {name}, does not exist");
+            CreateUser(name);
+            return Users.FirstOrDefault(x => x.UserName == name);
         }
 
         public List<Post> Wall(string user)

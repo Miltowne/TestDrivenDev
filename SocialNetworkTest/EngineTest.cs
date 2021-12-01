@@ -15,46 +15,6 @@ namespace SocialNetworkTest
         public void TestInitializer()
         {
             engine = new SocialNetworkEngine();
-            //    engine.CreateUser("Alice");
-            //    engine.CreateUser("Bob");
-            //    engine.CreateUser("Charlie");
-            //    engine.CreateUser("Mallory ");
-            //    engine.CreateUser("Erik");
-            //    engine.CreateUser("Patrik");
-            //    engine.CreateUser("Cuba");
-            //    engine.CreateUser("Elis");
-            //    engine.CreateUser("Martin");
-        }
-
-        [TestMethod]
-        [DataRow("Pia")]
-        public void TestUserExist(string user)
-        {
-            //Arrange
-
-
-            //Act
-            bool userExist = engine.UserExist(user);
-
-            //Assert
-            Assert.IsFalse(userExist);
-        }
-
-        [TestMethod]
-        [DataRow("Milton")]
-        public void TestCreateUser(string name)
-        {
-            //Arrange
-            List<User> Users = new List<User>();
-            User user = new User(name);
-            Users.Add(user);
-
-
-            //Act
-            engine.CreateUser(name);
-
-            //Assert
-            Assert.AreEqual(engine.Users[0].UserName, user.UserName);
         }
 
         [TestMethod]
@@ -107,9 +67,11 @@ namespace SocialNetworkTest
 
             //Act
             engine.SendMessage(sender, receiver, message);
+            var listOfMessages = engine.ViewMessages(receiver);
 
             //Assert
             Assert.AreEqual(message, receiverUser.Messages.FirstOrDefault().Body);
+            Assert.IsNotNull(listOfMessages);
         }
 
 
@@ -147,31 +109,17 @@ namespace SocialNetworkTest
         }
 
 
-        [TestMethod]
-        [DataRow("Erik"), DataRow("Tim")]
-        public void TestGetUser(string expectedName)
-        {
-            //Arrange
-
-            //Act
-            engine.CreateUser(expectedName);
-            var actualName = engine.GetUser(expectedName);
-
-            //Assert
-            Assert.AreEqual(expectedName, actualName.UserName);
-        }
+        
 
         [TestMethod]
         [DataRow("Erik", "@Alice hej vad gör du", "Alice"), DataRow("Tim", "@Erik varför stavas du med k?", "Erik")]
-        public void TestTaggedUserInCreatePost(string userName, string post, string timelineUserName)
+        public void TestTaggedUserInCreatePost(string userName, string post, string taggedUser)
         {
             //Arrange
-            var expectedUser = engine.GetUser(timelineUserName);
-
 
             //Act
             engine.CreatePost(userName, post);
-            var listOfPosts = engine.TimeLine(timelineUserName);
+            var listOfPosts = engine.TimeLine(taggedUser);
 
             //Assert
             Assert.AreEqual(listOfPosts.FirstOrDefault().Body, post);
