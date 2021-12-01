@@ -2,6 +2,7 @@ using Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Model;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SocialNetworkTest
 {
@@ -25,13 +26,11 @@ namespace SocialNetworkTest
             //    engine.CreateUser("Martin");
         }
 
-<<<<<<< HEAD
         [TestMethod]
         [DataRow("Pia")]
         public void TestUserExist(string user)
         {
             //Arrange
-            int e = 1;
 
 
             //Act
@@ -66,13 +65,13 @@ namespace SocialNetworkTest
 
             engine.CreateUser(name);
             engine.CreateUser(followedUser);
-            var name1 = engine.GetUser(name);
-            var name2 = engine.GetUser(followedUser);
+            var user1 = engine.GetUser(name);
+            var user2 = engine.GetUser(followedUser);
 
             var posten = new Post(followedUser, post);
 
-            name1.Posts.Add(posten);
-            name2.Posts.Add(posten);
+            user1.Posts.Add(posten);
+            user2.Posts.Add(posten);
 
 
             //Act
@@ -81,7 +80,7 @@ namespace SocialNetworkTest
 
 
             //Assert
-            Assert.AreEqual(list[0], posten);
+            Assert.AreEqual(list.FirstOrDefault(), posten);
         }
 
 
@@ -96,13 +95,8 @@ namespace SocialNetworkTest
             var list = engine.TimeLine(name);
 
             //Assert
-            Assert.AreEqual(list[0].Body, post);
+            Assert.AreEqual(list.FirstOrDefault().Body, post);
         }
-
-
-=======
-       
->>>>>>> 07678ad4b28d368f9745e9d0454c6901b91e0c31
 
         [TestMethod]
         [DataRow("Pia", "Ludde", "Vad gï¿½r du?")]
@@ -115,25 +109,23 @@ namespace SocialNetworkTest
             engine.SendMessage(sender, receiver, message);
 
             //Assert
-            Assert.AreEqual(message, receiverUser.Messages[0].Body);
+            Assert.AreEqual(message, receiverUser.Messages.FirstOrDefault().Body);
         }
 
 
         [TestMethod]
         [DataRow("Erik", "Sara"), DataRow("Elis", "Patrik"), DataRow("Martin", "Cuba")]
-        public void TestFollowers(string follower, string followed)
+        public void TestFollower(string follower, string followed)
         {
             //Arrange
-            var user = engine.GetUser(followed);
-            string[] userInput = new string[] { follower, "/follow", followed };
-            engine.Follow(follower, followed);
-            List<string> listOfFollowers = new List<string>();
+            var followerUser = engine.GetUser(follower);
 
             //Act
-            listOfFollowers.Add(follower);
+            engine.Follow(follower, followed);
+
 
             //Assert
-            //Assert.AreEqual(user.[0], listOfFollowers[0]);
+            Assert.AreEqual(followerUser.MySubscriptions.FirstOrDefault().UserName, followed);
         }
 
         [TestMethod]
@@ -142,7 +134,6 @@ namespace SocialNetworkTest
         {
             //Arrange
             var user = engine.GetUser("Erik");
-            string[] userInput = new string[] { "Erik", "/CreatePost", "Hello" };
 
             var timelineList = user.Posts;
 
@@ -168,6 +159,22 @@ namespace SocialNetworkTest
 
             //Assert
             Assert.AreEqual(expectedName, actualName.UserName);
+        }
+
+        [TestMethod]
+        [DataRow("Erik", "@Alice hej vad gör du", "Alice"), DataRow("Tim", "@Erik varför stavas du med k?", "Erik")]
+        public void TestTaggedUserInCreatePost(string userName, string post, string timelineUserName)
+        {
+            //Arrange
+            var expectedUser = engine.GetUser(timelineUserName);
+
+
+            //Act
+            engine.CreatePost(userName, post);
+            var listOfPosts = engine.TimeLine(timelineUserName);
+
+            //Assert
+            Assert.AreEqual(listOfPosts.FirstOrDefault().Body, post);
         }
     }
 }

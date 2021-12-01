@@ -16,7 +16,6 @@ namespace Engine
             var user = Users.FirstOrDefault(x => x.UserName == name);
             if (user == null)
             {
-                CreateUser(name);
                 return false;
             }
             else return true;
@@ -69,9 +68,9 @@ namespace Engine
             {
                 GetUser(user).Posts.Add(newPost);
                 var postArray = post.Split(' ');
-                string name = postArray[0].Remove(0, 1);
-                SendMessage(user, name, post);
-                GetUser(name).Posts.Add(newPost);
+                string receiver = postArray[0].Remove(0, 1);
+                SendMessage(user, receiver, post);
+                GetUser(receiver).Posts.Add(newPost);
             }
             else
                 GetUser(user).Posts.Add(newPost);
@@ -84,13 +83,7 @@ namespace Engine
 
         public List<Message> ViewMessages(string user)
         {
-            var messageList = new List<Message>();
-            GetUser(user).Messages.Sort((a, b) => b.SendDateTime.CompareTo(a.SendDateTime));
-            foreach (var message in GetUser(user).Messages)
-            {
-                messageList.Add(message);
-            }
-            return messageList;
+            return GetUser(user).Messages.OrderByDescending(x => x.SendDateTime).ToList();
         }
     }
 }
