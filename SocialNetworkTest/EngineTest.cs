@@ -112,8 +112,8 @@ namespace SocialNetworkTest
         
 
         [TestMethod]
-        [DataRow("Erik", "@Alice hej vad gör du", "Alice"), DataRow("Tim", "@Erik varför stavas du med k?", "Erik")]
-        public void TestTaggedUserInCreatePost(string userName, string post, string taggedUser)
+        [DataRow("Erik", "@Alice hej vad gör du", "Alice", "Erik tagged you in a post: @Alice hej vad gör du"), DataRow("Tim", "@Erik varför stavas du med k?", "Erik", "Tim tagged you in a post: @Erik varför stavas du med k?")]
+        public void TestTaggedUserInCreatePost(string userName, string post, string taggedUser, string expectedPost)
         {
             //Arrange
 
@@ -122,7 +122,7 @@ namespace SocialNetworkTest
             var listOfPosts = engine.TimeLine(taggedUser);
 
             //Assert
-            Assert.AreEqual(listOfPosts.FirstOrDefault().Body, post);
+            Assert.AreEqual(listOfPosts.FirstOrDefault().Body, expectedPost);
         }
     }
 }

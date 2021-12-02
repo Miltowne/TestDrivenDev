@@ -10,9 +10,8 @@ namespace TestDrivDevInlupp
             SocialNetworkEngine engine = new SocialNetworkEngine();
             int inputNamePosition = 0;
             int inputCommandPosition = 1;
-            int inputMessangeOrReceiverPosition = 2;
 
-            Console.WriteLine("Hello and welcome to our social network!");
+            Console.WriteLine("Hello and welcome to your social network!");
 
             while (true)
             {
@@ -20,37 +19,18 @@ namespace TestDrivDevInlupp
 
                 var inputName = string.Empty;
                 var inputCommand = string.Empty;
-                var inputMessageOrReceiver = string.Empty;
-                var inputReceiverName = string.Empty;
 
                 if (command[inputNamePosition] != null)
                     inputName = command[inputNamePosition];
                 if (command[inputCommandPosition] != null)
                     inputCommand = command[inputCommandPosition];
-                if (command[inputMessangeOrReceiverPosition] != null)
-                {
-                    inputMessageOrReceiver = command[inputMessangeOrReceiverPosition];
-                    for (int i = inputMessangeOrReceiverPosition +1; i < command.Length; i++)
-                        inputMessageOrReceiver = $"{inputMessageOrReceiver} {command[i]}";
-                    string[] receiverName = inputMessageOrReceiver.Split(' ');
-                    inputReceiverName = receiverName[0];
-                }
 
-                //if (command != null && command.Length > inputNamePosition)
-                //    inputName = command?[inputNamePosition];
-
-                //if (command != null && command.Length > inputCommandPosition)
-                //    inputCommand = command?[inputCommandPosition];
-
-                //if (command != null && command.Length > inputMessangePosition)
-                //    for (var i = 2; i < command.Length; i++)
-                //        inputMessage = string.IsNullOrEmpty(inputMessage) ? command?[i] : $"{inputMessage} {command?[i]}";
-
+               
                 switch (inputCommand)
                 {
                     // message
                     case "/send_message":
-                        engine.SendMessage(inputName, inputReceiverName, inputMessageOrReceiver);
+                        engine.SendMessage(inputName, command[2], MessageBuilder(command));
                         break;
 
                     // view message
@@ -63,7 +43,7 @@ namespace TestDrivDevInlupp
 
                     // post
                     case "/post":
-                        engine.CreatePost(inputName, inputMessageOrReceiver);
+                        engine.CreatePost(inputName, PostBuilder(command));
                         break;
 
                     // wall
@@ -83,7 +63,7 @@ namespace TestDrivDevInlupp
 
                     // follow
                     case "/follow":
-                        var usersToFollow = engine.Follow(inputName, inputReceiverName);
+                        var usersToFollow = engine.Follow(inputName, command[2]);
                         foreach (var user in usersToFollow)
                         {
                             Console.WriteLine(user.UserName);
@@ -99,6 +79,42 @@ namespace TestDrivDevInlupp
 
 
             }
+        }
+        static string MessageBuilder(string[] userInput)
+        {
+            int messageStart = 3;
+
+            string message = "";
+            for (int i = messageStart; i < userInput.Length; i++)
+            {
+                if (i == messageStart)
+                {
+                    message += userInput[i];
+                }
+                else
+                {
+                    message += " " + userInput[i];
+                }
+            }
+            return message;
+        }
+
+        static string PostBuilder(string[] userInput)
+        {
+            int messageStart = 2;
+            string message = "";
+            for (int i = messageStart; i < userInput.Length; i++)
+            {
+                if (i == messageStart)
+                {
+                    message += userInput[i];
+                }
+                else
+                {
+                    message += " " + userInput[i];
+                }
+            }
+            return message;
         }
     }
 }

@@ -63,11 +63,12 @@ namespace Engine
 
             if (post[0] == '@')
             {
+                var newPostReceiver = new Post(user, $"{user} tagged you in a post: " + post);
                 GetUser(user).Posts.Add(newPost);
                 var postArray = post.Split(' ');
                 string receiver = postArray[0].Remove(0, 1);
                 SendMessage(user, receiver, post);
-                GetUser(receiver).Posts.Add(newPost);
+                GetUser(receiver).Posts.Add(newPostReceiver);
             }
             else
                 GetUser(user).Posts.Add(newPost);
